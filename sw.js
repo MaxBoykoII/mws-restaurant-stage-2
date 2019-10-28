@@ -1,5 +1,5 @@
 const cacheRoot = 'restaurant-reviews';
-const cacheVersion = 'v8';
+const cacheVersion = 'v9';
 const staticCacheName = `${cacheRoot}-${cacheVersion}`;
 
 console.log(`Using sw version ${staticCacheName}...`);
@@ -10,6 +10,7 @@ self.addEventListener('install', event => {
         caches.open(staticCacheName).then((cache) =>
             cache.addAll([
                 '/',
+                '/manifest.json',
                 'restaurant.html',
                 'dist/main.js',
                 'dist/restaurant_info.js',
