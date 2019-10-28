@@ -1,5 +1,5 @@
 const cacheRoot = 'restaurant-reviews';
-const cacheVersion = 'v5';
+const cacheVersion = 'v6';
 const staticCacheName = `${cacheRoot}-${cacheVersion}`;
 
 console.log(`Using sw version ${staticCacheName}...`);
@@ -11,9 +11,8 @@ self.addEventListener('install', event => {
             cache.addAll([
                 '/',
                 'restaurant.html',
-                'js/dbhelper.js',
-                'js/main.js',
-                'js/restaurant_info.js',
+                'dist/main.js',
+                'dist/restaurant_info.js',
                 'css/styles.css',
                 'css/styles-sm.css',
                 'css/styles-xs.css',

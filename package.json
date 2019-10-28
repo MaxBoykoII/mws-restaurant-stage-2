@@ -4,7 +4,9 @@
   "description": "A progressive web app for adding restaurant reviews",
   "main": "index.html",
   "scripts": {
-    "start": "python -m http.server 8000"
+    "start": "python -m http.server 8000",
+    "build": "webpack",
+    "build-dev": "webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/MaxBoykoII/mws-restaurant-stage-1/issues"
   },
-  "homepage": "https://github.com/MaxBoykoII/mws-restaurant-stage-1#readme"
+  "homepage": "https://github.com/MaxBoykoII/mws-restaurant-stage-1#readme",
+  "devDependencies": {
+    "path": "^0.12.7",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9"
+  }
 }
