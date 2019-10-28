@@ -1,5 +1,5 @@
 const cacheRoot = 'restaurant-reviews';
-const cacheVersion = 'v6';
+const cacheVersion = 'v8';
 const staticCacheName = `${cacheRoot}-${cacheVersion}`;
 
 console.log(`Using sw version ${staticCacheName}...`);
@@ -13,6 +13,7 @@ self.addEventListener('install', event => {
                 'restaurant.html',
                 'dist/main.js',
                 'dist/restaurant_info.js',
+                '/sw.js',
                 'css/styles.css',
                 'css/styles-sm.css',
                 'css/styles-xs.css',
@@ -50,5 +51,5 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request).then(response => response || fetch(event.request)));
+        caches.match(event.request, { ignoreSearch: true }).then(response => response || fetch(event.request)));
 });

@@ -22,5 +22,8 @@
     "path": "^0.12.7",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9"
+  },
+  "dependencies": {
+    "idb": "^4.0.5"
   }
 }

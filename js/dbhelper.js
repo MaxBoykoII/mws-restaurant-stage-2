@@ -1,7 +1,9 @@
+import { openDB } from 'idb';
+
 /**
  * Common database helper functions.
  */
- export class DBHelper {
+export class DBHelper {
 
   /**
    * Database URL.
@@ -12,16 +14,66 @@
     return `http://localhost:${port}`;
   }
 
+  static get dbPromise() {
+    return openDB('restaurants-db', 1, {
+      upgrade: upgradeDb => {
+        upgradeDb.createObjectStore('restaurants', { keyPath: 'id' });
+      }
+    })
+  }
+
   /**
    * Fetch all restaurants.
    */
   static async fetchRestaurants(callback) {
     const url = `${DBHelper.DATABASE_URL}/restaurants`;
 
-    const response = await fetch(url);
+    const response = await fetch(url).catch(_ => null);
+
+    if (!response || response.status !== 200) {
+      console.log('Request for restaurant data failed...using idb cache instead...');
+      const cache = await DBHelper.loadCachedRestaurants();
+      callback(null, cache);
+
+      return;
+    }
     const restaurants = await response.json();
 
-    response.status === 200 ? callback(null, restaurants) : callback(response.error, null);
+    await DBHelper.updateIdb(restaurants);
+
+    callback(null, restaurants);
+  }
+
+  static async updateIdb(newRestaurants) {
+    const db = await DBHelper.dbPromise;
+
+    const tx = db.transaction('restaurants', 'readwrite');
+    const store = tx.objectStore('restaurants');
+
+    const savedRestaurants = await store.getAll();
+
+    for (let restaurant of savedRestaurants) {
+      store.delete(restaurant.id);
+    }
+
+    for (let restaurant of newRestaurants) {
+      store.put(restaurant);
+    }
+
+    await tx.complete;
+  }
+
+  static async loadCachedRestaurants() {
+    const db = await DBHelper.dbPromise;
+
+    const tx = db.transaction('restaurants');
+    const store = tx.objectStore('restaurants');
+
+    const restaurants = await store.getAll();
+
+    await tx.complete;
+
+    return restaurants;
   }
 
   /**
